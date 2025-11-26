@@ -51,7 +51,7 @@ export default function Onboarding() {
           <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-2">
             <Dumbbell className="w-8 h-8 text-primary" />
           </div>
-          <CardTitle className="text-3xl font-heading uppercase tracking-wide text-primary">Camp Tracker</CardTitle>
+          <CardTitle className="text-3xl font-heading uppercase tracking-wide text-primary">KiLT BattleLog</CardTitle>
           <CardDescription>
             Initialize your 12-week BJJ competition camp. 
             Track training, nutrition, and recovery.

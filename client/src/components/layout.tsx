@@ -27,7 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* Mobile Header */}
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:hidden">
         <div className="flex h-14 items-center px-4">
-          <h1 className="font-heading text-xl font-bold tracking-tighter text-primary">CAMP TRACKER</h1>
+          <h1 className="font-heading text-xl font-bold tracking-tighter text-primary">KiLT BATTLELOG</h1>
         </div>
       </header>
 
@@ -62,7 +62,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {showNav && (
         <div className="hidden md:flex fixed top-0 left-0 h-screen w-64 border-r border-border bg-card p-6 flex-col">
           <div className="mb-8">
-            <h1 className="font-heading text-2xl font-bold text-primary tracking-tighter">BJJ CAMP<br/>TRACKER</h1>
+            <h1 className="font-heading text-2xl font-bold text-primary tracking-tighter">KiLT<br/>BATTLELOG</h1>
           </div>
           <nav className="space-y-2 flex-1">
             {navItems.map((item) => {
