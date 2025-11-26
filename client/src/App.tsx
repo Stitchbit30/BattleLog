@@ -8,6 +8,8 @@ import Progress from "@/pages/progress";
 import Program from "@/pages/program";
 import Settings from "@/pages/settings";
 import WeekView from "@/pages/week-view";
+import CoachDashboard from "@/pages/coach";
+import CoachAthleteView from "@/pages/coach-athlete";
 import NotFound from "@/pages/not-found";
 
 // Wrapper to handle auth redirect logic within context
@@ -29,6 +31,8 @@ function AppContent() {
         <Route path="/progress" component={isProfileSet ? Progress : Onboarding} />
         <Route path="/program" component={isProfileSet ? Program : Onboarding} />
         <Route path="/settings" component={isProfileSet ? Settings : Onboarding} />
+        <Route path="/coach" component={isProfileSet ? CoachDashboard : Onboarding} />
+        <Route path="/coach/:id" component={isProfileSet ? CoachAthleteView : Onboarding} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'wouter';
-import { Home, Activity, BookOpen, User, CalendarDays } from 'lucide-react';
+import { Home, Activity, BookOpen, User, CalendarDays, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
 import { useCampStore } from '@/lib/store';
@@ -19,6 +19,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { icon: Activity, label: 'Progress', href: '/progress' },
     { icon: BookOpen, label: 'Program Reference', href: '/program' },
     { icon: User, label: 'Profile/Settings', href: '/settings' },
+    { icon: Users, label: 'Coach View', href: '/coach' },
   ];
 
   return (
@@ -38,17 +39,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* Bottom Navigation - Mobile First */}
       {showNav && (
         <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-background/95 backdrop-blur pb-safe pt-2 md:hidden">
-          <div className="grid grid-cols-5 items-center justify-items-center px-2">
+          <div className="grid grid-cols-6 items-center justify-items-center px-2">
             {navItems.map((item) => {
-              const isActive = location === item.href;
+              const isActive = location === item.href || (item.href === '/coach' && location.startsWith('/coach'));
               return (
                 <Link key={item.href} href={item.href}>
                   <a className={cn(
                     "flex flex-col items-center justify-center gap-1 py-2 w-full transition-colors",
                     isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                   )}>
-                    <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-                    <span className="text-[10px] font-medium text-center leading-tight px-1">{item.label.replace(' ', '\n')}</span>
+                    <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} />
+                    <span className="text-[9px] font-medium text-center leading-tight px-1">{item.label.replace(' ', '\n')}</span>
                   </a>
                 </Link>
               );
@@ -65,7 +66,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
           <nav className="space-y-2 flex-1">
             {navItems.map((item) => {
-              const isActive = location === item.href;
+              const isActive = location === item.href || (item.href === '/coach' && location.startsWith('/coach'));
               return (
                 <Link key={item.href} href={item.href}>
                   <a className={cn(
