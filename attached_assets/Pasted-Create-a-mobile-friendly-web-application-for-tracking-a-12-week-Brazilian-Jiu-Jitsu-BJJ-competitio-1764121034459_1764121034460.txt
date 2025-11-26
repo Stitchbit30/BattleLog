@@ -1,0 +1,69 @@
+Create a mobile-friendly web application for tracking a 12-week Brazilian Jiu-Jitsu (BJJ) competition camp. The app should let fighters:
+
+Set up a profile (name, weight, height, martial art, competition date)
+
+View their daily training and nutrition tasks based on the program schedule
+
+Check off each completed item (training, nutrition, recovery)
+
+Enter a daily journal describing their performance, challenges, and notes for their coach
+
+See weekly progress and session completion rates; log weight
+
+Easily send a formatted check-in summary to their coach (via copy/export/email)
+
+Reference full program details any time (phases, exercise guides, nutrition, recovery)
+
+Core Features:
+
+Profile Management: Editable profile (localStorage persistence)
+
+Dynamic Daily Dashboard: Week/day calculation, automatic schedule display (S&C, BJJ, conditioning, nutrition)
+
+Checklists: For training, exercises, and all nutrition components
+
+Journal Entry: Daily textarea log, last 7 days reference, “Save” button
+
+Weekly Overview: Calendar with completion indicators
+
+Progress Tracking: Stats page showing completion %, weight chart, session stats
+
+Coach Communication: “Send Update to Coach” button compiles stats/journal for export/copy/email
+
+Program Reference: View full standardized camp program anytime—phases, lifts, RPE table, nutrition, auto-regulation guidelines
+
+Mobile-first UI: Responsive, with modern athletic design and dark/light mode toggle
+
+Implementation Notes:
+
+Use vanilla JS or TypeScript (or React) with localStorage for all persistence
+
+All schedule and progression logic hard-coded (standardized lifts every session, sets/reps/RPE vary by week)
+
+All UI elements must work smoothly on a phone
+
+Feature visual status icons: completed (green), incomplete (gray), rest day (blue)
+
+Export function outputs copyable plain text for coaches
+
+Design System:
+
+Primary color: teal (for active/completed items)
+
+Professional, clean athletic theme (white/charcoal backgrounds, accent colors)
+
+Form validation on setup
+
+Animations for check-ins/check-offs
+
+User Story:
+
+Athlete sets up profile and program start/competition dates
+
+Each day, sees their tailored training & nutrition checklist for that day/week
+
+Checks off what’s completed, writes a journal entry
+
+Can send a weekly summary to coach at any time
+
+Reviews their progress and stats over time
