@@ -4,10 +4,12 @@ import { useCampStore } from '@/lib/store';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
+import { Watch, Smartphone, Activity } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 export default function Settings() {
   const { profile, setProfile, resetData } = useCampStore();
@@ -37,6 +39,13 @@ export default function Settings() {
     }
   };
 
+  const handleConnect = (service: string) => {
+    toast({
+      title: "Integration Connected",
+      description: `Successfully linked with ${service}.`,
+    });
+  };
+
   if (!profile) return null;
 
   return (
@@ -62,6 +71,56 @@ export default function Settings() {
               <Input value={profile.weight} disabled className="bg-muted" />
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+           <div className="flex items-center gap-2">
+            <Activity className="w-5 h-5 text-primary" />
+            <CardTitle className="text-lg">Integrations</CardTitle>
+           </div>
+           <CardDescription>Connect your wearables to auto-sync health data.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+           <div className="flex items-center justify-between p-3 border border-border rounded-lg bg-card/50">
+             <div className="flex items-center gap-3">
+               <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center">
+                 <Watch className="w-4 h-4" />
+               </div>
+               <div>
+                 <div className="font-medium">Apple Health</div>
+                 <div className="text-xs text-muted-foreground">Sync Sleep, HR, HRV</div>
+               </div>
+             </div>
+             <Button variant="outline" size="sm" onClick={() => handleConnect('Apple Health')}>Connect</Button>
+           </div>
+
+           <div className="flex items-center justify-between p-3 border border-border rounded-lg bg-card/50">
+             <div className="flex items-center gap-3">
+               <div className="w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center font-bold text-xs">
+                 W
+               </div>
+               <div>
+                 <div className="font-medium">Whoop</div>
+                 <div className="text-xs text-muted-foreground">Sync Recovery & Strain</div>
+               </div>
+             </div>
+             <Button variant="outline" size="sm" onClick={() => handleConnect('Whoop')}>Connect</Button>
+           </div>
+
+            <div className="flex items-center justify-between p-3 border border-border rounded-lg bg-card/50">
+             <div className="flex items-center gap-3">
+               <div className="w-8 h-8 rounded-full bg-stone-800 text-white flex items-center justify-center">
+                 <div className="w-4 h-4 rounded-full border-2 border-white/50"></div>
+               </div>
+               <div>
+                 <div className="font-medium">Oura</div>
+                 <div className="text-xs text-muted-foreground">Sync Readiness & Sleep</div>
+               </div>
+             </div>
+             <Button variant="outline" size="sm" onClick={() => handleConnect('Oura')}>Connect</Button>
+           </div>
         </CardContent>
       </Card>
 

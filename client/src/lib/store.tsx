@@ -17,6 +17,11 @@ type DailyLog = {
   journalEntry: string;
   weight?: string;
   mood?: number; // 1-5
+  sleepHours?: string;
+  sleepQuality?: string;
+  hrv?: string;
+  restingHR?: string;
+  activeCalories?: string;
 };
 
 type CampState = {

@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useCampStore } from '@/lib/store';
 import { format } from 'date-fns';
-import { CheckCircle2, Circle, Flame, Utensils, Moon, ChevronRight, Calendar, Scale, Activity } from 'lucide-react';
+import { CheckCircle2, Circle, Flame, Utensils, Moon, ChevronRight, Calendar, Scale, Activity, Heart, Zap, BedDouble } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 export default function Dashboard() {
   const { getDailySchedule, logs, updateLog, toggleItem, profile } = useCampStore();
   const { toast } = useToast();
   const [today, setToday] = useState(new Date());
+  const [showHealth, setShowHealth] = useState(false);
   
   const scheduleData = getDailySchedule(today);
   const dateKey = format(today, 'yyyy-MM-dd');
@@ -45,6 +47,10 @@ export default function Dashboard() {
 
   const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     updateLog(dateKey, { weight: e.target.value });
+  };
+
+  const handleHealthUpdate = (field: string, value: string) => {
+    updateLog(dateKey, { [field]: value });
   };
 
   const handleCheck = (itemId: string) => {
@@ -92,39 +98,120 @@ export default function Dashboard() {
         </CardContent>
       </Card>
 
-      {/* Daily Metrics */}
-      <div className="grid grid-cols-2 gap-4">
-        <Card className="bg-card/50">
-          <CardHeader className="p-3 pb-0">
-            <div className="flex items-center gap-2">
-              <Scale className="w-3 h-3 text-muted-foreground" />
-              <CardTitle className="text-xs uppercase text-muted-foreground">Morning Weight</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent className="p-3 pt-1">
-            <div className="flex items-baseline gap-1">
-              <Input 
-                className="h-8 text-lg font-bold p-0 border-0 border-b rounded-none focus-visible:ring-0 w-full bg-transparent" 
-                placeholder="0.0" 
-                value={currentLog.weight || ''}
-                onChange={handleWeightChange}
-              />
-            </div>
-          </CardContent>
-        </Card>
-         <Card className="bg-card/50">
-          <CardHeader className="p-3 pb-0">
-            <div className="flex items-center gap-2">
-              <Activity className="w-3 h-3 text-muted-foreground" />
-              <CardTitle className="text-xs uppercase text-muted-foreground">Readiness</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent className="p-3 pt-1">
-             <div className="flex items-center h-8">
-               <span className="text-sm font-medium text-muted-foreground">High</span>
-             </div>
-          </CardContent>
-        </Card>
+      {/* Daily Metrics & Health Data */}
+      <div className="space-y-4">
+         <div className="grid grid-cols-2 gap-4">
+          <Card className="bg-card/50">
+            <CardHeader className="p-3 pb-0">
+              <div className="flex items-center gap-2">
+                <Scale className="w-3 h-3 text-muted-foreground" />
+                <CardTitle className="text-xs uppercase text-muted-foreground">Morning Weight</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="p-3 pt-1">
+              <div className="flex items-baseline gap-1">
+                <Input 
+                  className="h-8 text-lg font-bold p-0 border-0 border-b rounded-none focus-visible:ring-0 w-full bg-transparent" 
+                  placeholder="0.0" 
+                  value={currentLog.weight || ''}
+                  onChange={handleWeightChange}
+                />
+              </div>
+            </CardContent>
+          </Card>
+           <Card className="bg-card/50" onClick={() => setShowHealth(!showHealth)}>
+            <CardHeader className="p-3 pb-0">
+              <div className="flex items-center justify-between w-full">
+                 <div className="flex items-center gap-2">
+                  <Activity className="w-3 h-3 text-muted-foreground" />
+                  <CardTitle className="text-xs uppercase text-muted-foreground">Health Data</CardTitle>
+                </div>
+                <ChevronRight className={cn("w-3 h-3 text-muted-foreground transition-transform", showHealth && "rotate-90")} />
+              </div>
+            </CardHeader>
+            <CardContent className="p-3 pt-1">
+               <div className="flex items-center h-8">
+                 <span className="text-sm font-medium text-primary cursor-pointer">
+                    {showHealth ? "Hide Details" : "Add Metrics"}
+                 </span>
+               </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Collapsible open={showHealth} onOpenChange={setShowHealth}>
+          <CollapsibleContent className="space-y-4 animate-in slide-in-from-top-2">
+            <Card className="bg-muted/30 border-primary/10">
+               <CardContent className="p-4 grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs text-muted-foreground flex items-center gap-1">
+                      <BedDouble className="w-3 h-3" /> Sleep (Hrs)
+                    </label>
+                    <Input 
+                      type="number" 
+                      placeholder="8.0" 
+                      className="h-8 bg-card" 
+                      value={currentLog.sleepHours || ''}
+                      onChange={(e) => handleHealthUpdate('sleepHours', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-muted-foreground flex items-center gap-1">
+                      <Zap className="w-3 h-3" /> HRV (ms)
+                    </label>
+                    <Input 
+                      type="number" 
+                      placeholder="50" 
+                      className="h-8 bg-card"
+                      value={currentLog.hrv || ''}
+                      onChange={(e) => handleHealthUpdate('hrv', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs text-muted-foreground flex items-center gap-1">
+                      <Heart className="w-3 h-3" /> RHR (bpm)
+                    </label>
+                    <Input 
+                      type="number" 
+                      placeholder="60" 
+                      className="h-8 bg-card"
+                      value={currentLog.restingHR || ''}
+                      onChange={(e) => handleHealthUpdate('restingHR', e.target.value)}
+                    />
+                  </div>
+                   <div className="space-y-1">
+                    <label className="text-xs text-muted-foreground flex items-center gap-1">
+                      <Flame className="w-3 h-3" /> Active Cals
+                    </label>
+                    <Input 
+                      type="number" 
+                      placeholder="500" 
+                      className="h-8 bg-card"
+                      value={currentLog.activeCalories || ''}
+                      onChange={(e) => handleHealthUpdate('activeCalories', e.target.value)}
+                    />
+                  </div>
+                   <div className="col-span-2 space-y-1">
+                    <label className="text-xs text-muted-foreground">Sleep Quality</label>
+                     <Select 
+                       value={currentLog.sleepQuality || ''} 
+                       onValueChange={(val) => handleHealthUpdate('sleepQuality', val)}
+                     >
+                      <SelectTrigger className="h-8 bg-card">
+                        <SelectValue placeholder="Select quality" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Poor">Poor</SelectItem>
+                        <SelectItem value="Fair">Fair</SelectItem>
+                        <SelectItem value="Good">Good</SelectItem>
+                        <SelectItem value="Excellent">Excellent</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+               </CardContent>
+            </Card>
+          </CollapsibleContent>
+        </Collapsible>
       </div>
 
       {/* Checklists */}
