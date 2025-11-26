@@ -1,29 +1,43 @@
 import { Switch, Route } from "wouter";
-import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { CampProvider, useCampStore } from "@/lib/store";
+import Layout from "@/components/layout";
+import Dashboard from "@/pages/dashboard";
+import Onboarding from "@/pages/onboarding";
+import Journal from "@/pages/journal";
+import Progress from "@/pages/progress";
+import Program from "@/pages/program";
+import Settings from "@/pages/settings";
 import NotFound from "@/pages/not-found";
 
-function Router() {
+// Wrapper to handle auth redirect logic within context
+function AppContent() {
+  const { profile } = useCampStore();
+
+  // If no profile, force onboarding unless we are already there
+  // This is a simple client-side protection
+  const isProfileSet = !!profile;
+
   return (
-    <Switch>
-      {/* Add pages below */}
-      {/* <Route path="/" component={Home}/> */}
-      {/* Fallback to 404 */}
-      <Route component={NotFound} />
-    </Switch>
+    <Layout>
+      <Switch>
+        <Route path="/">
+          {isProfileSet ? <Dashboard /> : <Onboarding />}
+        </Route>
+        <Route path="/journal" component={isProfileSet ? Journal : Onboarding} />
+        <Route path="/stats" component={isProfileSet ? Progress : Onboarding} />
+        <Route path="/program" component={isProfileSet ? Program : Onboarding} />
+        <Route path="/settings" component={isProfileSet ? Settings : Onboarding} />
+        <Route component={NotFound} />
+      </Switch>
+    </Layout>
   );
 }
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <CampProvider>
+      <AppContent />
+    </CampProvider>
   );
 }
 
