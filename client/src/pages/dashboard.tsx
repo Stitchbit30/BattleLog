@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCampStore } from '@/lib/store';
-import { format } from 'date-fns';
-import { CheckCircle2, Circle, Flame, Utensils, Moon, ChevronRight, Calendar, Scale, Activity, Heart, Zap, BedDouble } from 'lucide-react';
+import { format, subDays } from 'date-fns';
+import { CheckCircle2, Circle, Flame, Utensils, Moon, ChevronRight, Calendar, Scale, Activity, Heart, Zap, BedDouble, Edit2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,6 +18,7 @@ export default function Dashboard() {
   const { toast } = useToast();
   const [today, setToday] = useState(new Date());
   const [showHealth, setShowHealth] = useState(false);
+  const [isEditingFocus, setIsEditingFocus] = useState(false);
   
   const scheduleData = getDailySchedule(today);
   const dateKey = format(today, 'yyyy-MM-dd');
@@ -27,6 +28,32 @@ export default function Dashboard() {
 
   const hasStarted = dayNumber > 0;
   
+  // Logic to determine Smart Focus
+  const getSmartFocus = () => {
+    if (currentLog.dailyFocus) return currentLog.dailyFocus;
+
+    // First Day Default
+    if (dayNumber === 1) return "Get ready for war";
+
+    // Check previous day
+    const yesterdayKey = format(subDays(today, 1), 'yyyy-MM-dd');
+    const prevLog = logs[yesterdayKey];
+
+    if (prevLog) {
+      if (prevLog.sleepQuality === 'Poor' || (prevLog.sleepHours && parseFloat(prevLog.sleepHours) < 6)) {
+        return "Prioritize Recovery & Sleep";
+      }
+      if (prevLog.journalEntry.toLowerCase().includes("injury") || prevLog.journalEntry.toLowerCase().includes("hurt")) {
+        return "Train Safe - Protect Injury";
+      }
+    }
+    
+    // Fallback to program notes
+    return daySchedule?.notes || "Stay Consistent";
+  };
+
+  const dailyFocus = getSmartFocus();
+
   // Safe access for isRestDay
   const isRestDay = daySchedule?.training?.[0]?.includes("Rest");
 
@@ -55,6 +82,10 @@ export default function Dashboard() {
 
   const handleCheck = (itemId: string) => {
     toggleItem(dateKey, itemId);
+  };
+
+  const handleFocusUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateLog(dateKey, { dailyFocus: e.target.value });
   };
 
   if (!hasStarted) {
@@ -90,11 +121,34 @@ export default function Dashboard() {
       <Progress value={progress} className="h-2" />
 
       {/* Focus Card */}
-      <Card className="bg-card/50 border-primary/20 overflow-hidden">
+      <Card className="bg-card/50 border-primary/20 overflow-hidden relative group">
         <div className="absolute top-0 left-0 w-1 h-full bg-primary"></div>
         <CardContent className="p-4">
-          <p className="text-xs text-muted-foreground uppercase font-bold mb-1">Daily Focus</p>
-          <p className="text-sm font-medium italic">"{daySchedule?.notes}"</p>
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-xs text-muted-foreground uppercase font-bold">Daily Focus</p>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-5 w-5 opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={() => setIsEditingFocus(!isEditingFocus)}
+            >
+              <Edit2 className="w-3 h-3 text-muted-foreground" />
+            </Button>
+          </div>
+          
+          {isEditingFocus ? (
+             <Input 
+               autoFocus
+               value={dailyFocus}
+               onChange={handleFocusUpdate}
+               onBlur={() => setIsEditingFocus(false)}
+               className="h-8 font-medium italic"
+             />
+          ) : (
+             <p className="text-sm font-medium italic cursor-pointer" onClick={() => setIsEditingFocus(true)}>
+               "{dailyFocus}"
+             </p>
+          )}
         </CardContent>
       </Card>
 

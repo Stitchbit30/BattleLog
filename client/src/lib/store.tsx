@@ -22,6 +22,7 @@ type DailyLog = {
   hrv?: string;
   restingHR?: string;
   activeCalories?: string;
+  dailyFocus?: string;
 };
 
 type CampState = {
