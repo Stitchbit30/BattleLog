@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'wouter';
-import { Home, NotebookPen, Activity, BookOpen, User } from 'lucide-react';
+import { Home, Activity, BookOpen, User, CalendarDays } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
 import { useCampStore } from '@/lib/store';
@@ -15,10 +15,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   const navItems = [
     { icon: Home, label: 'Today', href: '/' },
-    { icon: NotebookPen, label: 'Journal', href: '/journal' },
-    { icon: Activity, label: 'Stats', href: '/stats' },
-    { icon: BookOpen, label: 'Program', href: '/program' },
-    { icon: User, label: 'Profile', href: '/settings' },
+    { icon: CalendarDays, label: 'Week View', href: '/week' },
+    { icon: Activity, label: 'Progress', href: '/progress' },
+    { icon: BookOpen, label: 'Program Reference', href: '/program' },
+    { icon: User, label: 'Profile/Settings', href: '/settings' },
   ];
 
   return (
@@ -48,7 +48,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     isActive ? "text-primary" : "text-muted-foreground hover:text-foreground"
                   )}>
                     <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-                    <span className="text-[10px] font-medium">{item.label}</span>
+                    <span className="text-[10px] font-medium text-center leading-tight px-1">{item.label.replace(' ', '\n')}</span>
                   </a>
                 </Link>
               );

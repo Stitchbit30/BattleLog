@@ -7,6 +7,7 @@ import Journal from "@/pages/journal";
 import Progress from "@/pages/progress";
 import Program from "@/pages/program";
 import Settings from "@/pages/settings";
+import WeekView from "@/pages/week-view";
 import NotFound from "@/pages/not-found";
 
 // Wrapper to handle auth redirect logic within context
@@ -23,8 +24,9 @@ function AppContent() {
         <Route path="/">
           {isProfileSet ? <Dashboard /> : <Onboarding />}
         </Route>
+        <Route path="/week" component={isProfileSet ? WeekView : Onboarding} />
         <Route path="/journal" component={isProfileSet ? Journal : Onboarding} />
-        <Route path="/stats" component={isProfileSet ? Progress : Onboarding} />
+        <Route path="/progress" component={isProfileSet ? Progress : Onboarding} />
         <Route path="/program" component={isProfileSet ? Program : Onboarding} />
         <Route path="/settings" component={isProfileSet ? Settings : Onboarding} />
         <Route component={NotFound} />
