@@ -2,9 +2,15 @@ import fs from "node:fs";
 import { type Server } from "node:http";
 import path from "node:path";
 
+
 import express, { type Express, type Request } from "express";
 
 import runApp from "./app";
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
 
 export async function serveStatic(app: Express, server: Server) {
   const distPath = path.resolve(import.meta.dirname, "public");
