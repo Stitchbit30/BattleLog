@@ -26,3 +26,4 @@ export async function serveStatic(app: Express, server: Server) {
 (async () => {
   await runApp(serveStatic);
 })();
+export default app;
